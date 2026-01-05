@@ -3,17 +3,35 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { authApi, cartApi, wishlistApi } from '@/lib/api';
+import { useState, useEffect, useRef } from 'react';
+import { authApi, cartApi, wishlistApi, categoriesApi } from '@/lib/api';
 
 export default function Navbar() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const catalogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (catalogRef.current && !catalogRef.current.contains(event.target as Node)) {
+        setIsCatalogOpen(false);
+      }
+    };
+
+    if (isCatalogOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCatalogOpen]);
 
   const { data: user } = useQuery({
     queryKey: ['user', 'profile'],
@@ -34,6 +52,11 @@ export default function Navbar() {
     enabled: isAuthenticated,
   });
 
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: categoriesApi.getAll,
+  });
+
   const cartCount = cartItems?.reduce((sum, item) => sum + item.quantity, 0) || 0;
   const wishlistCount = wishlistItems?.length || 0;
 
@@ -51,7 +74,36 @@ export default function Navbar() {
         </Link>
 
         <div className="navbar-links">
-          <Link href="/products">Каталог</Link>
+          <div className="catalog-menu" ref={catalogRef}>
+            <button
+              className="catalog-button"
+              onClick={() => setIsCatalogOpen(!isCatalogOpen)}
+              onMouseEnter={() => setIsCatalogOpen(true)}
+            >
+              Каталог
+            </button>
+            {isCatalogOpen && categories && categories.length > 0 && (
+              <div className="catalog-dropdown" onMouseLeave={() => setIsCatalogOpen(false)}>
+                <Link
+                  href="/products"
+                  className="catalog-dropdown-item"
+                  onClick={() => setIsCatalogOpen(false)}
+                >
+                  Все товары
+                </Link>
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/products?category=${category.id}`}
+                    className="catalog-dropdown-item"
+                    onClick={() => setIsCatalogOpen(false)}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
           {isAuthenticated ? (
             <>
               <Link href="/cart" className="cart-link">

@@ -96,6 +96,67 @@ a {
   color: var(--primary);
 }
 
+/* Catalog Menu */
+.catalog-menu {
+  position: relative;
+}
+
+.catalog-button {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.catalog-button:hover {
+  color: var(--primary);
+}
+
+.catalog-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  z-index: 1000;
+  padding: 0.5rem 0;
+  animation: fadeInDown 0.2s ease-out;
+}
+
+.catalog-dropdown-item {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+.catalog-dropdown-item:hover {
+  background: var(--bg-secondary);
+  color: var(--primary);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .cart-link,
 .wishlist-link {
   position: relative;
@@ -1713,6 +1774,56 @@ p {
   height: fit-content;
 }
 
+/* Breadcrumbs */
+.breadcrumbs {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+}
+
+.breadcrumbs .container {
+  padding: 0 2rem;
+}
+
+.breadcrumbs-list {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.breadcrumbs-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumbs-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.breadcrumbs-link:hover {
+  color: var(--primary);
+}
+
+.breadcrumbs-current {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.breadcrumbs-separator {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0 0.25rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .navbar-container {
@@ -1725,6 +1836,15 @@ p {
     flex-wrap: wrap;
     gap: 1rem;
     justify-content: center;
+  }
+
+  .catalog-dropdown {
+    left: auto;
+    right: 0;
+  }
+
+  .breadcrumbs .container {
+    padding: 0 1rem;
   }
 
   .container {
