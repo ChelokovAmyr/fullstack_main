@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { productsApi, categoriesApi } from '@/lib/api';
 import { useState } from 'react';
+import ProductCard from '@/components/ProductCard';
 
 export default function Home() {
   const router = useRouter();
@@ -58,34 +59,7 @@ export default function Home() {
         ) : productsData?.products && productsData.products.length > 0 ? (
           <div className="products-grid">
             {productsData.products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="product-card"
-              >
-                {product.images && product.images[0] && (
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="product-image"
-                    loading="lazy"
-                  />
-                )}
-                <div className="product-info">
-                  <h3>{product.name}</h3>
-                  <div className="product-price">
-                    {product.oldPrice && (
-                      <span className="old-price">{product.oldPrice} ₽</span>
-                    )}
-                    <span className="current-price">{product.price} ₽</span>
-                  </div>
-                  {product.rating > 0 && (
-                    <div className="product-rating">
-                      ⭐ {Number(product.rating).toFixed(1)} ({product.reviewCount})
-                    </div>
-                  )}
-                </div>
-              </Link>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { productsApi, categoriesApi } from '@/lib/api';
+import ProductCard from '@/components/ProductCard';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -99,39 +100,7 @@ export default function ProductsPage() {
         <>
           <div className="products-grid">
             {productsData.products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="product-card"
-              >
-                {product.images && product.images[0] && (
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="product-image"
-                    loading="lazy"
-                  />
-                )}
-                <div className="product-info">
-                  <h3>{product.name}</h3>
-                  <div className="product-price">
-                    {product.oldPrice && (
-                      <span className="old-price">{product.oldPrice} ₽</span>
-                    )}
-                    <span className="current-price">{product.price} ₽</span>
-                  </div>
-                  {product.rating > 0 && (
-                    <div className="product-rating">
-                      ⭐ {Number(product.rating).toFixed(1)} ({product.reviewCount})
-                    </div>
-                  )}
-                  {product.stock > 0 ? (
-                    <span className="in-stock">В наличии</span>
-                  ) : (
-                    <span className="out-of-stock">Нет в наличии</span>
-                  )}
-                </div>
-              </Link>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
