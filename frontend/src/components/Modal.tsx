@@ -41,27 +41,19 @@ export default function Modal({ isOpen, onClose, title, children, type = 'info' 
   const typeStyles = {
     success: {
       icon: '✓',
-      bgColor: 'bg-green-100',
-      borderColor: 'border-green-500',
-      textColor: 'text-green-800',
+      className: 'modal-success',
     },
     error: {
       icon: '✕',
-      bgColor: 'bg-red-100',
-      borderColor: 'border-red-500',
-      textColor: 'text-red-800',
+      className: 'modal-error',
     },
     warning: {
       icon: '⚠',
-      bgColor: 'bg-yellow-100',
-      borderColor: 'border-yellow-500',
-      textColor: 'text-yellow-800',
+      className: 'modal-warning',
     },
     info: {
       icon: 'ℹ',
-      bgColor: 'bg-blue-100',
-      borderColor: 'border-blue-500',
-      textColor: 'text-blue-800',
+      className: 'modal-info',
     },
   };
 
@@ -73,12 +65,12 @@ export default function Modal({ isOpen, onClose, title, children, type = 'info' 
       onClick={onClose}
     >
       <div
-        className={`modal-content ${style.bgColor} ${style.borderColor}`}
+        className={`modal-content ${style.className}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
           {title && (
-            <h2 className={`modal-title ${style.textColor}`}>
+            <h2 className="modal-title">
               <span className="modal-icon">{style.icon}</span>
               {title}
             </h2>
