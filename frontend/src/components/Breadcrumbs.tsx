@@ -45,9 +45,9 @@ export default function Breadcrumbs() {
     breadcrumbs.push({ label: 'Каталог', href: '/products' });
     if (product) {
       if (product.category) {
-        breadcrumbs.push({ 
-          label: product.category.name, 
-          href: `/products?category=${product.category.id}` 
+        breadcrumbs.push({
+          label: product.category.name,
+          href: `/products?category=${product.category.id}`
         });
       }
       breadcrumbs.push({ label: product.name, href: null });
@@ -85,8 +85,8 @@ export default function Breadcrumbs() {
   }
 
   return (
-    <nav className="breadcrumbs">
-      <div className="container">
+    <nav className="breadcrumbs" aria-label="Хлебные крошки">
+      <div className="breadcrumbs-container">
         <ol className="breadcrumbs-list">
           {breadcrumbs.map((crumb, index) => (
             <li key={index} className="breadcrumbs-item">
@@ -98,7 +98,7 @@ export default function Breadcrumbs() {
                 <span className="breadcrumbs-current">{crumb.label}</span>
               )}
               {index < breadcrumbs.length - 1 && (
-                <span className="breadcrumbs-separator">/</span>
+                <span className="breadcrumbs-separator" aria-hidden="true">/</span>
               )}
             </li>
           ))}
