@@ -67,10 +67,10 @@ npm run install:all
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=1234
-DB_DATABASE=my_fullstack_db
-JWT_SECRET=your-secret-key-change-in-production
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+DB_DATABASE=your_database_name
+JWT_SECRET=your-secret-key-change-in-production-use-long-random-string
 PORT=3001
 NODE_ENV=development
 ```
@@ -89,12 +89,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 docker-compose up -d
 ```
 
-Это создаст контейнер PostgreSQL с настройками:
-- Хост: localhost
-- Порт: 5432
-- Пользователь: postgres
-- Пароль: 1234
-- База данных: my_fullstack_db
+Это создаст контейнер PostgreSQL. Настройки можно изменить через переменные окружения или docker-compose.yml
 
 ## 🚀 Запуск проекта
 
@@ -130,7 +125,7 @@ npm run seed
 ```
 
 Это создаст:
-- Админ пользователя (email: admin@shop.com, password: admin123)
+- Админ пользователя (email и пароль настраиваются в seed скрипте)
 - 6 категорий товаров
 - 16 товаров в разных категориях
 

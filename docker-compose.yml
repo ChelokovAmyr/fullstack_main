@@ -5,9 +5,9 @@ services:
     image: postgres:15-alpine
     container_name: fullstack_postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: my_fullstack_db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_this_password}
+      POSTGRES_DB: ${POSTGRES_DB:-my_fullstack_db}
     ports:
       - "5432:5432"
     volumes:

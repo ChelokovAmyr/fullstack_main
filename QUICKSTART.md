@@ -16,12 +16,7 @@ docker-compose up -d
 
 ### Вариант B: Локальный PostgreSQL
 
-Убедитесь, что PostgreSQL запущен и доступен по адресу:
-- Хост: localhost
-- Порт: 5432
-- Пользователь: postgres
-- Пароль: 1234
-- База данных: my_fullstack_db (создайте её вручную)
+Убедитесь, что PostgreSQL запущен и доступен. Создайте базу данных вручную.
 
 ## 3. Настройка переменных окружения
 
@@ -30,10 +25,10 @@ docker-compose up -d
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=1234
-DB_DATABASE=my_fullstack_db
-JWT_SECRET=your-secret-key-change-in-production
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+DB_DATABASE=your_database_name
+JWT_SECRET=your-secret-key-change-in-production-use-long-random-string
 PORT=3001
 NODE_ENV=development
 ```

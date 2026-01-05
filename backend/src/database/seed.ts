@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT) || 5432,
   username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || '1234',
+  password: process.env.DB_PASSWORD || 'change_this_password',
   database: process.env.DB_DATABASE || 'my_fullstack_db',
   entities: [User, Category, Product, Order, OrderItem, Cart, Review, Wishlist],
   synchronize: false,
@@ -28,11 +28,13 @@ async function seed() {
   const productRepository = AppDataSource.getRepository(Product);
 
   // Create admin user
-  const adminPassword = await bcrypt.hash('admin123', 10);
-  let admin = await userRepository.findOne({ where: { email: 'admin@shop.com' } });
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@shop.com';
+  const adminPasswordPlain = process.env.ADMIN_PASSWORD || 'change_this_password_in_production';
+  const adminPassword = await bcrypt.hash(adminPasswordPlain, 10);
+  let admin = await userRepository.findOne({ where: { email: adminEmail } });
   if (!admin) {
     admin = userRepository.create({
-      email: 'admin@shop.com',
+      email: adminEmail,
       password: adminPassword,
       firstName: 'Admin',
       lastName: 'User',

@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT) || 5432,
   username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || '1234',
+  password: process.env.DB_PASSWORD || 'change_this_password',
   database: process.env.DB_DATABASE || 'my_fullstack_db',
   entities: [User, Category, Product, Order, OrderItem, Cart, Review, Wishlist],
   migrations: ['src/migrations/**/*.ts'],
