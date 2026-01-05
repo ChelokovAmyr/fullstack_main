@@ -22,7 +22,7 @@ export default function RegisterPage() {
       router.push('/');
     },
     onError: (error: any) => {
-      setError(error.response?.data?.message || 'Registration failed');
+      setError(error.response?.data?.message || 'Ошибка регистрации');
     },
   });
 
@@ -67,7 +67,7 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
-              placeholder="your@email.com"
+              placeholder="example@email.com"
             />
           </div>
           <div className="form-group">

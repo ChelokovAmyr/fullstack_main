@@ -101,7 +101,7 @@ export default function ProductCard({ product, showWishlist = true }: ProductCar
       setModal({
         isOpen: true,
         type: 'info',
-        title: 'Вход required',
+        title: 'Требуется вход',
         message: 'Пожалуйста, войдите в систему, чтобы добавить товар в корзину',
       });
       return;
@@ -125,7 +125,7 @@ export default function ProductCard({ product, showWishlist = true }: ProductCar
       setModal({
         isOpen: true,
         type: 'info',
-        title: 'Вход required',
+        title: 'Требуется вход',
         message: 'Пожалуйста, войдите в систему, чтобы добавить товар в избранное',
       });
       return;

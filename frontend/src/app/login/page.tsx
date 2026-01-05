@@ -20,7 +20,7 @@ export default function LoginPage() {
       router.push('/');
     },
     onError: (error: any) => {
-      setError(error.response?.data?.message || 'Login failed');
+      setError(error.response?.data?.message || 'Ошибка входа');
     },
   });
 
@@ -43,7 +43,7 @@ export default function LoginPage() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
-              placeholder="your@email.com"
+              placeholder="example@email.com"
             />
           </div>
           <div className="form-group">

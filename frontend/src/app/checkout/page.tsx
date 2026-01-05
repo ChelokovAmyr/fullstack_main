@@ -25,7 +25,7 @@ export default function CheckoutPage() {
     if (!token) {
       router.push('/login');
     } else {
-      // Load user profile to pre-fill address
+      // Загрузить профиль пользователя для предзаполнения адреса
       authApi.getProfile().then((user) => {
         if (user.address) setFormData((f) => ({ ...f, shippingAddress: user.address || '' }));
         if (user.city) setFormData((f) => ({ ...f, shippingCity: user.city || '' }));

@@ -73,7 +73,7 @@ export default function Modal({ isOpen, onClose, title, children, type = 'info' 
           <button
             className="modal-close"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="Закрыть"
           >
             ×
           </button>
@@ -86,7 +86,7 @@ export default function Modal({ isOpen, onClose, title, children, type = 'info' 
             className="btn btn-primary"
             onClick={onClose}
           >
-            OK
+            ОК
           </button>
         </div>
       </div>
