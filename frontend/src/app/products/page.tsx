@@ -122,7 +122,7 @@ export default function ProductsPage() {
                   </div>
                   {product.rating > 0 && (
                     <div className="product-rating">
-                      ⭐ {product.rating.toFixed(1)} ({product.reviewCount})
+                      ⭐ {Number(product.rating).toFixed(1)} ({product.reviewCount})
                     </div>
                   )}
                   {product.stock > 0 ? (

@@ -105,7 +105,7 @@ export class ProductsService {
     const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
     const averageRating = totalRating / product.reviews.length;
 
-    product.rating = Math.round(averageRating * 100) / 100;
+    product.rating = parseFloat((Math.round(averageRating * 100) / 100).toFixed(2));
     product.reviewCount = product.reviews.length;
 
     return this.productsRepository.save(product);

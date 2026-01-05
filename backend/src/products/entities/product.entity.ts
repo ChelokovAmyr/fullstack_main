@@ -29,10 +29,25 @@ export class Product {
   @Column('text', { nullable: true })
   description: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value) || 0,
+    },
+  })
   price: number;
 
-  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 2, 
+    nullable: true,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => value ? parseFloat(value) : null,
+    },
+  })
   oldPrice: number;
 
   @Column({ default: 0 })
@@ -47,7 +62,15 @@ export class Product {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column('decimal', { precision: 3, scale: 2, default: 0 })
+  @Column('decimal', { 
+    precision: 3, 
+    scale: 2, 
+    default: 0,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value) || 0,
+    },
+  })
   rating: number;
 
   @Column({ default: 0 })

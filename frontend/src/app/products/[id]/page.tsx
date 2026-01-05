@@ -63,10 +63,10 @@ export default function ProductPage() {
   });
 
   const createReviewMutation = useMutation({
-    mutationFn: () => reviewsApi.create({ 
-      productId, 
-      rating, 
-      comment: reviewComment.trim() || undefined 
+    mutationFn: () => reviewsApi.create({
+      productId,
+      rating,
+      comment: reviewComment.trim() || undefined
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
@@ -122,7 +122,7 @@ export default function ProductPage() {
 
           {product.rating > 0 && (
             <div className="product-rating">
-              ⭐ {product.rating.toFixed(1)} ({product.reviewCount} отзывов)
+              ⭐ {Number(product.rating).toFixed(1)} ({product.reviewCount} отзывов)
             </div>
           )}
 
