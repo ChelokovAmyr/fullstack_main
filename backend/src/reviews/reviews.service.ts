@@ -30,7 +30,7 @@ export class ReviewsService {
       userId,
       productId: createReviewDto.productId,
       rating: createReviewDto.rating,
-      comment: createReviewDto.comment,
+      comment: createReviewDto.comment?.trim() || null,
     });
 
     const savedReview = await this.reviewsRepository.save(review);

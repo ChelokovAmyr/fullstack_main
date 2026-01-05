@@ -63,12 +63,21 @@ export default function ProductPage() {
   });
 
   const createReviewMutation = useMutation({
-    mutationFn: () => reviewsApi.create({ productId, rating, comment: reviewComment }),
+    mutationFn: () => reviewsApi.create({ 
+      productId, 
+      rating, 
+      comment: reviewComment.trim() || undefined 
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
       queryClient.invalidateQueries({ queryKey: ['product', productId] });
       setReviewComment('');
       setRating(5);
+      alert('Отзыв успешно добавлен!');
+    },
+    onError: (error: any) => {
+      const errorMessage = error.response?.data?.message || error.message || 'Ошибка при добавлении отзыва';
+      alert(errorMessage);
     },
   });
 
