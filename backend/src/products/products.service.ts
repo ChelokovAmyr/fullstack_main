@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, Between, FindOptionsWhere, MoreThanOrEqual } from 'typeorm';
+import { Repository, Like, Between, FindOptionsWhere, MoreThanOrEqual, Raw } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -31,33 +31,42 @@ export class ProductsService {
       limit = 20,
     } = query;
 
-    const where: FindOptionsWhere<Product> = {
-      isActive: true,
-    };
+    const queryBuilder = this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.reviews', 'reviews')
+      .where('product.isActive = :isActive', { isActive: true });
 
     if (categoryId) {
-      where.categoryId = categoryId;
+      queryBuilder.andWhere('product.categoryId = :categoryId', { categoryId });
     }
 
     if (search) {
-      where.name = Like(`%${search}%`);
+      // Case-insensitive search in name OR description
+      queryBuilder.andWhere(
+        '(LOWER(product.name) LIKE LOWER(:search) OR LOWER(product.description) LIKE LOWER(:search))',
+        { search: `%${search}%` },
+      );
     }
 
     if (minPrice !== undefined || maxPrice !== undefined) {
-      where.price = Between(minPrice || 0, maxPrice || 999999);
+      queryBuilder.andWhere('product.price BETWEEN :minPrice AND :maxPrice', {
+        minPrice: minPrice || 0,
+        maxPrice: maxPrice || 999999,
+      });
     }
 
     if (minRating !== undefined) {
-      where.rating = MoreThanOrEqual(minRating) as any;
+      queryBuilder.andWhere('product.rating >= :minRating', { minRating });
     }
 
-    const [products, total] = await this.productsRepository.findAndCount({
-      where,
-      relations: ['category', 'reviews'],
-      order: { [sortBy]: sortOrder },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    // Apply sorting
+    queryBuilder.orderBy(`product.${sortBy}`, sortOrder);
+
+    // Apply pagination
+    queryBuilder.skip((page - 1) * limit).take(limit);
+
+    const [products, total] = await queryBuilder.getManyAndCount();
 
     return {
       products,
