@@ -29,8 +29,8 @@ export class Product {
   @Column('text', { nullable: true })
   description: string;
 
-  @Column('decimal', { 
-    precision: 10, 
+  @Column('decimal', {
+    precision: 10,
     scale: 2,
     transformer: {
       to: (value: number) => value,
@@ -39,9 +39,9 @@ export class Product {
   })
   price: number;
 
-  @Column('decimal', { 
-    precision: 10, 
-    scale: 2, 
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
     nullable: true,
     transformer: {
       to: (value: number) => value,
@@ -62,9 +62,9 @@ export class Product {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column('decimal', { 
-    precision: 3, 
-    scale: 2, 
+  @Column('decimal', {
+    precision: 3,
+    scale: 2,
     default: 0,
     transformer: {
       to: (value: number) => value,

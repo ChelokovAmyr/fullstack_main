@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { authApi, ordersApi, wishlistApi } from '@/lib/api';
 import Link from 'next/link';
+import Modal from '@/components/Modal';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -19,6 +20,12 @@ export default function ProfilePage() {
     address: '',
     city: '',
     postalCode: '',
+  });
+  const [modal, setModal] = useState<{ isOpen: boolean; type: 'success' | 'error' | 'info'; title: string; message: string }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: '',
   });
 
   useEffect(() => {
@@ -62,7 +69,20 @@ export default function ProfilePage() {
     mutationFn: authApi.updateProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user', 'profile'] });
-      alert('Профиль обновлен');
+      setModal({
+        isOpen: true,
+        type: 'success',
+        title: 'Успешно',
+        message: 'Профиль обновлен',
+      });
+    },
+    onError: (error: any) => {
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Ошибка',
+        message: error.response?.data?.message || 'Не удалось обновить профиль',
+      });
     },
   });
 
@@ -275,6 +295,15 @@ export default function ProfilePage() {
           )}
         </div>
       )}
+
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        title={modal.title}
+        type={modal.type}
+      >
+        <p>{modal.message}</p>
+      </Modal>
     </div>
   );
 }

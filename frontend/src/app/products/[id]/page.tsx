@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { productsApi, cartApi, reviewsApi, wishlistApi, authApi } from '@/lib/api';
 import Link from 'next/link';
+import Modal from '@/components/Modal';
 
 export default function ProductPage() {
   const params = useParams();
@@ -14,6 +15,12 @@ export default function ProductPage() {
   const [rating, setRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [modal, setModal] = useState<{ isOpen: boolean; type: 'success' | 'error' | 'info'; title: string; message: string }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: '',
+  });
 
   const queryClient = useQueryClient();
 
@@ -44,7 +51,20 @@ export default function ProductPage() {
     mutationFn: () => cartApi.add(productId, quantity),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
-      alert('Товар добавлен в корзину!');
+      setModal({
+        isOpen: true,
+        type: 'success',
+        title: 'Успешно',
+        message: 'Товар добавлен в корзину!',
+      });
+    },
+    onError: (error: any) => {
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Ошибка',
+        message: error.response?.data?.message || 'Не удалось добавить товар в корзину',
+      });
     },
   });
 
@@ -63,21 +83,31 @@ export default function ProductPage() {
   });
 
   const createReviewMutation = useMutation({
-    mutationFn: () => reviewsApi.create({
-      productId,
-      rating,
-      comment: reviewComment.trim() || undefined
+    mutationFn: () => reviewsApi.create({ 
+      productId, 
+      rating, 
+      comment: reviewComment.trim() || undefined 
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
       queryClient.invalidateQueries({ queryKey: ['product', productId] });
       setReviewComment('');
       setRating(5);
-      alert('Отзыв успешно добавлен!');
+      setModal({
+        isOpen: true,
+        type: 'success',
+        title: 'Успешно',
+        message: 'Отзыв успешно добавлен!',
+      });
     },
     onError: (error: any) => {
       const errorMessage = error.response?.data?.message || error.message || 'Ошибка при добавлении отзыва';
-      alert(errorMessage);
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Ошибка',
+        message: errorMessage,
+      });
     },
   });
 
@@ -241,6 +271,15 @@ export default function ProductPage() {
           )}
         </div>
       </div>
+
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        title={modal.title}
+        type={modal.type}
+      >
+        <p>{modal.message}</p>
+      </Modal>
     </div>
   );
 }

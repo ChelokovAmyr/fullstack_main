@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { cartApi, ordersApi, authApi } from '@/lib/api';
+import Modal from '@/components/Modal';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -54,7 +55,12 @@ export default function CheckoutPage() {
     e.preventDefault();
 
     if (!cartItems || cartItems.length === 0) {
-      alert('Корзина пуста');
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Ошибка',
+        message: 'Корзина пуста',
+      });
       return;
     }
 
@@ -192,6 +198,15 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        title={modal.title}
+        type={modal.type}
+      >
+        <p>{modal.message}</p>
+      </Modal>
     </div>
   );
 }
