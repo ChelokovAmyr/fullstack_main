@@ -40,19 +40,15 @@ export default function Modal({ isOpen, onClose, title, children, type = 'info' 
 
   const typeStyles = {
     success: {
-      icon: '✓',
       className: 'modal-success',
     },
     error: {
-      icon: '✕',
       className: 'modal-error',
     },
     warning: {
-      icon: '⚠',
       className: 'modal-warning',
     },
     info: {
-      icon: 'ℹ',
       className: 'modal-info',
     },
   };
@@ -71,7 +67,6 @@ export default function Modal({ isOpen, onClose, title, children, type = 'info' 
         <div className="modal-header">
           {title && (
             <h2 className="modal-title">
-              <span className="modal-icon">{style.icon}</span>
               {title}
             </h2>
           )}

@@ -72,7 +72,7 @@ export default function CartPage() {
   return (
     <div className="container">
       <div className="cart-header">
-        <h1>🛒 Корзина</h1>
+        <h1>Корзина</h1>
         {cartItems && cartItems.length > 0 && (
           <p className="cart-subtitle">
             {totalItems} {totalItems === 1 ? 'товар' : totalItems < 5 ? 'товара' : 'товаров'}
@@ -91,7 +91,7 @@ export default function CartPage() {
                   className="btn-clear-cart"
                   disabled={clearMutation.isPending}
                 >
-                  {clearMutation.isPending ? 'Очистка...' : '🗑️ Очистить корзину'}
+                  {clearMutation.isPending ? 'Очистка...' : 'Очистить корзину'}
                 </button>
               )}
             </div>
@@ -110,7 +110,7 @@ export default function CartPage() {
                       <div className="cart-item-image-placeholder">📦</div>
                     )}
                   </Link>
-                  
+
                   <div className="cart-item-details">
                     <Link href={`/products/${item.product.id}`} className="cart-item-name">
                       <h3>{item.product.name}</h3>
@@ -184,7 +184,7 @@ export default function CartPage() {
                       disabled={removeMutation.isPending}
                       title="Удалить из корзины"
                     >
-                      {removeMutation.isPending ? '⏳' : '🗑️'}
+                      {removeMutation.isPending ? '...' : '×'}
                     </button>
                   </div>
                 </div>
@@ -205,16 +205,15 @@ export default function CartPage() {
               </div>
             </div>
             <Link href="/checkout" className="btn-checkout">
-              Оформить заказ →
+              Оформить заказ
             </Link>
             <Link href="/products" className="link-continue-shopping">
-              ← Продолжить покупки
+              Продолжить покупки
             </Link>
           </div>
         </div>
       ) : (
         <div className="empty-cart">
-          <div className="empty-cart-icon">🛒</div>
           <h2>Ваша корзина пуста</h2>
           <p>Добавьте товары из каталога, чтобы они появились здесь</p>
           <Link href="/products" className="btn btn-primary btn-large">

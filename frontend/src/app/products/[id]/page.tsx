@@ -121,7 +121,7 @@ export default function ProductPage() {
 
   return (
     <div className="container">
-      <Link href="/products" className="back-link">← Назад к каталогу</Link>
+      <Link href="/products" className="back-link">Назад к каталогу</Link>
 
       <div className="product-detail">
         <div className="product-images">
@@ -152,7 +152,7 @@ export default function ProductPage() {
 
           {product.rating > 0 && (
             <div className="product-rating">
-              ⭐ {Number(product.rating).toFixed(1)} ({product.reviewCount} отзывов)
+              Рейтинг: {Number(product.rating).toFixed(1)} ({product.reviewCount} отзывов)
             </div>
           )}
 
@@ -229,7 +229,7 @@ export default function ProductPage() {
               >
                 {[5, 4, 3, 2, 1].map((r) => (
                   <option key={r} value={r}>
-                    {r} ⭐
+                    {r} из 5
                   </option>
                 ))}
               </select>
@@ -257,7 +257,7 @@ export default function ProductPage() {
                 <div className="review-header">
                   <strong>{review.user?.firstName || 'Пользователь'}</strong>
                   <span className="review-rating">
-                    {'⭐'.repeat(review.rating)}
+                    Оценка: {review.rating} из 5
                   </span>
                   <span className="review-date">
                     {new Date(review.createdAt).toLocaleDateString()}

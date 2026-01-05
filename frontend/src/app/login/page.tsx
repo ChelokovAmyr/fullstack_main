@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="container">
       <div className="form-container">
-        <h1>Login</h1>
+        <h1>Вход</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -43,25 +43,27 @@ export default function LoginPage() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
+              placeholder="your@email.com"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Пароль</label>
             <input
               type="password"
               id="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
+              placeholder="Введите пароль"
             />
           </div>
           {error && <div className="error">{error}</div>}
-          <button type="submit" className="btn" disabled={loginMutation.isPending}>
-            {loginMutation.isPending ? 'Logging in...' : 'Login'}
+          <button type="submit" className="btn btn-primary" disabled={loginMutation.isPending}>
+            {loginMutation.isPending ? 'Вход...' : 'Войти'}
           </button>
         </form>
-        <p style={{ marginTop: '1rem', textAlign: 'center' }}>
-          Don't have an account? <Link href="/register" className="link">Register</Link>
+        <p style={{ marginTop: '1.5rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+          Нет аккаунта? <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 500 }}>Зарегистрироваться</Link>
         </p>
       </div>
     </div>

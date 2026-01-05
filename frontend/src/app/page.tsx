@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <div className="container">
       <div className="hero">
-        <h1>Добро пожаловать в наш интернет-магазин!</h1>
+        <h1>Добро пожаловать в наш интернет-магазин</h1>
         <p>Широкий ассортимент товаров по выгодным ценам</p>
       </div>
 
@@ -50,7 +50,7 @@ export default function Home() {
         <div className="section-header">
           <h2>Популярные товары</h2>
           <Link href="/products" className="view-all-link">
-            Смотреть все →
+            Смотреть все
           </Link>
         </div>
 

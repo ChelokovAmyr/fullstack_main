@@ -151,7 +151,7 @@ export default function ProductCard({ product, showWishlist = true }: ProductCar
             </div>
             {product.rating > 0 && (
               <div className="product-rating">
-                ⭐ {Number(product.rating).toFixed(1)} ({product.reviewCount})
+                Рейтинг: {Number(product.rating).toFixed(1)} ({product.reviewCount} отзывов)
               </div>
             )}
             {product.stock > 0 ? (
@@ -176,7 +176,7 @@ export default function ProductCard({ product, showWishlist = true }: ProductCar
               disabled={addToWishlistMutation.isPending || removeFromWishlistMutation.isPending}
               title={isInWishlist ? 'Удалить из избранного' : 'Добавить в избранное'}
             >
-              {isInWishlist ? '❤️' : '🤍'}
+              {isInWishlist ? '★' : '☆'}
             </button>
           )}
         </div>

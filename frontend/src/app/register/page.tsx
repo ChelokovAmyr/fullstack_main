@@ -35,26 +35,28 @@ export default function RegisterPage() {
   return (
     <div className="container">
       <div className="form-container">
-        <h1>Register</h1>
+        <h1>Регистрация</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="firstName">First Name</label>
+            <label htmlFor="firstName">Имя</label>
             <input
               type="text"
               id="firstName"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
               required
+              placeholder="Введите имя"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="lastName">Last Name</label>
+            <label htmlFor="lastName">Фамилия</label>
             <input
               type="text"
               id="lastName"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
               required
+              placeholder="Введите фамилию"
             />
           </div>
           <div className="form-group">
@@ -65,10 +67,11 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
+              placeholder="your@email.com"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Пароль</label>
             <input
               type="password"
               id="password"
@@ -76,15 +79,16 @@ export default function RegisterPage() {
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
               minLength={6}
+              placeholder="Минимум 6 символов"
             />
           </div>
           {error && <div className="error">{error}</div>}
-          <button type="submit" className="btn" disabled={registerMutation.isPending}>
-            {registerMutation.isPending ? 'Registering...' : 'Register'}
+          <button type="submit" className="btn btn-primary" disabled={registerMutation.isPending}>
+            {registerMutation.isPending ? 'Регистрация...' : 'Зарегистрироваться'}
           </button>
         </form>
-        <p style={{ marginTop: '1rem', textAlign: 'center' }}>
-          Already have an account? <Link href="/login" className="link">Login</Link>
+        <p style={{ marginTop: '1.5rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+          Уже есть аккаунт? <Link href="/login" style={{ color: 'var(--primary)', fontWeight: 500 }}>Войти</Link>
         </p>
       </div>
     </div>
