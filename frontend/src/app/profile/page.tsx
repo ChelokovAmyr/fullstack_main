@@ -110,35 +110,49 @@ export default function ProfilePage() {
 
   return (
     <div className="container">
-      <h1>Личный кабинет</h1>
+      <div className="profile-header">
+        <div>
+          <h1>Личный кабинет</h1>
+          {user && (
+            <p className="profile-subtitle">
+              {user.firstName} {user.lastName}
+            </p>
+          )}
+        </div>
+        <button onClick={handleLogout} className="btn btn-secondary">
+          Выйти
+        </button>
+      </div>
 
       <div className="profile-tabs">
         <button
           onClick={() => setActiveTab('profile')}
-          className={activeTab === 'profile' ? 'active' : ''}
+          className={`profile-tab ${activeTab === 'profile' ? 'active' : ''}`}
         >
           Профиль
         </button>
         <button
           onClick={() => setActiveTab('orders')}
-          className={activeTab === 'orders' ? 'active' : ''}
+          className={`profile-tab ${activeTab === 'orders' ? 'active' : ''}`}
         >
           Заказы
         </button>
         <button
           onClick={() => setActiveTab('wishlist')}
-          className={activeTab === 'wishlist' ? 'active' : ''}
+          className={`profile-tab ${activeTab === 'wishlist' ? 'active' : ''}`}
         >
           Избранное
-        </button>
-        <button onClick={handleLogout} className="logout-button">
-          Выйти
         </button>
       </div>
 
       {activeTab === 'profile' && (
         <div className="profile-content">
-          <h2>Мой профиль</h2>
+          <div className="profile-content-header">
+            <h2>Мой профиль</h2>
+            <p className="profile-content-description">
+              Управляйте личной информацией и настройками аккаунта
+            </p>
+          </div>
           <form onSubmit={handleProfileSubmit} className="profile-form">
             <div className="form-group">
               <label htmlFor="firstName">Имя</label>
@@ -173,7 +187,9 @@ export default function ProfilePage() {
                 id="email"
                 value={profileData.email}
                 disabled
+                className="input-disabled"
               />
+              <small className="form-hint">Email нельзя изменить</small>
             </div>
 
             <div className="form-group">
@@ -224,26 +240,42 @@ export default function ProfilePage() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={updateProfileMutation.isPending}
-            >
-              Сохранить изменения
-            </button>
+            <div className="profile-form-actions">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={updateProfileMutation.isPending}
+              >
+                {updateProfileMutation.isPending ? 'Сохранение...' : 'Сохранить изменения'}
+              </button>
+            </div>
           </form>
         </div>
       )}
 
       {activeTab === 'orders' && (
         <div className="orders-content">
-          <h2>Мои заказы</h2>
+          <div className="profile-content-header">
+            <h2>Мои заказы</h2>
+            <p className="profile-content-description">
+              История всех ваших заказов
+            </p>
+          </div>
           {orders && orders.length > 0 ? (
             <div className="orders-list">
               {orders.map((order) => (
                 <div key={order.id} className="order-card">
-                  <div className="order-header">
-                    <span className="order-id">Заказ #{order.id.slice(0, 8)}</span>
+                  <div className="order-card-header">
+                    <div className="order-card-info">
+                      <div className="order-id">Заказ #{order.id.slice(0, 8)}</div>
+                      <div className="order-date">
+                        {new Date(order.createdAt).toLocaleDateString('ru-RU', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </div>
+                    </div>
                     <span className={`order-status status-${order.status}`}>
                       {order.status === 'pending' && 'В обработке'}
                       {order.status === 'processing' && 'Обрабатывается'}
@@ -252,54 +284,89 @@ export default function ProfilePage() {
                       {order.status === 'cancelled' && 'Отменен'}
                     </span>
                   </div>
-                  <div className="order-date">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </div>
                   <div className="order-items">
                     {order.items.map((item) => (
                       <div key={item.id} className="order-item">
-                        <span>{item.productName} x {item.quantity}</span>
-                        <span>{(item.price * item.quantity).toLocaleString()} ₽</span>
+                        <div className="order-item-info">
+                          <span className="order-item-name">{item.productName}</span>
+                          <span className="order-item-quantity">× {item.quantity}</span>
+                        </div>
+                        <span className="order-item-price">
+                          {(Number(item.price) * item.quantity).toLocaleString()} ₽
+                        </span>
                       </div>
                     ))}
                   </div>
-                  <div className="order-total">
-                    Итого: {order.total.toLocaleString()} ₽
+                  <div className="order-card-footer">
+                    <div className="order-total">
+                      <span>Итого:</span>
+                      <span className="order-total-amount">{Number(order.total).toLocaleString()} ₽</span>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p>У вас пока нет заказов</p>
+            <div className="empty-state">
+              <h3>У вас пока нет заказов</h3>
+              <p>Когда вы сделаете первый заказ, он появится здесь</p>
+              <Link href="/products" className="btn btn-primary">
+                Перейти к покупкам
+              </Link>
+            </div>
           )}
         </div>
       )}
 
       {activeTab === 'wishlist' && (
         <div className="wishlist-content">
-          <h2>Избранное</h2>
+          <div className="profile-content-header">
+            <h2>Избранное</h2>
+            <p className="profile-content-description">
+              Товары, которые вы добавили в избранное
+            </p>
+          </div>
           {wishlist && wishlist.length > 0 ? (
             <div className="wishlist-grid">
               {wishlist.map((item: any) => (
                 <Link
                   key={item.id}
                   href={`/products/${item.product.id}`}
-                  className="wishlist-item"
+                  className="wishlist-item-card"
                 >
-                  {item.product.images && item.product.images[0] && (
-                    <img
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      className="wishlist-image"
-                    />
-                  )}
-                  <h3>{item.product.name}</h3>
-                  <p className="price">{item.product.price} ₽</p>
+                  <div className="wishlist-item-image-wrapper">
+                    {item.product.images && item.product.images[0] ? (
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        className="wishlist-item-image"
+                      />
+                    ) : (
+                      <div className="wishlist-item-placeholder">Нет изображения</div>
+                    )}
+                  </div>
+                  <div className="wishlist-item-info">
+                    <h3 className="wishlist-item-name">{item.product.name}</h3>
+                    <div className="wishlist-item-price">
+                      {Number(item.product.price).toLocaleString()} ₽
+                    </div>
+                    {item.product.rating > 0 && (
+                      <div className="wishlist-item-rating">
+                        Рейтинг: {Number(item.product.rating).toFixed(1)}
+                      </div>
+                    )}
+                  </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <p>Ваш список избранного пуст</p>
+            <div className="empty-state">
+              <h3>Ваш список избранного пуст</h3>
+              <p>Добавьте товары в избранное, чтобы они появились здесь</p>
+              <Link href="/products" className="btn btn-primary">
+                Перейти к покупкам
+              </Link>
+            </div>
           )}
         </div>
       )}
