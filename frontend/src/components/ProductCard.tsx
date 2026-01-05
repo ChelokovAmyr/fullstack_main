@@ -141,52 +141,68 @@ export default function ProductCard({ product, showWishlist = true }: ProductCar
     <>
       <div className="product-card">
         <Link href={`/products/${product.id}`} className="product-card-link">
-          {product.images && product.images[0] && (
-            <img
-              src={product.images[0]}
-              alt={product.name}
-              className="product-image"
-              loading="lazy"
-            />
-          )}
+          <div className="product-image-wrapper">
+            {product.images && product.images[0] ? (
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="product-image"
+                loading="lazy"
+              />
+            ) : (
+              <div className="product-image-placeholder">Нет изображения</div>
+            )}
+            {product.stock <= 0 && (
+              <div className="product-badge-out">Нет в наличии</div>
+            )}
+          </div>
           <div className="product-info">
-            <h3>{product.name}</h3>
-            <div className="product-price">
-              {product.oldPrice && (
-                <span className="old-price">{product.oldPrice} ₽</span>
+            <div className="product-header">
+              <h3 className="product-name">{product.name}</h3>
+              {showWishlist && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleWishlistToggle(e);
+                  }}
+                  className={`product-wishlist-btn ${isInWishlist ? 'active' : ''}`}
+                  disabled={addToWishlistMutation.isPending || removeFromWishlistMutation.isPending}
+                  title={isInWishlist ? 'Удалить из избранного' : 'Добавить в избранное'}
+                >
+                  {isInWishlist ? '★' : '☆'}
+                </button>
               )}
-              <span className="current-price">{product.price} ₽</span>
             </div>
+            
             {product.rating > 0 && (
               <div className="product-rating">
-                Рейтинг: {Number(product.rating).toFixed(1)} ({product.reviewCount} отзывов)
+                <span className="rating-value">{Number(product.rating).toFixed(1)}</span>
+                <span className="rating-count">({product.reviewCount})</span>
               </div>
             )}
-            {product.stock > 0 ? (
-              <span className="in-stock">В наличии</span>
-            ) : (
-              <span className="out-of-stock">Нет в наличии</span>
-            )}
+
+            <div className="product-price-section">
+              <div className="product-price">
+                <span className="current-price">{Number(product.price).toLocaleString()} ₽</span>
+                {product.oldPrice && (
+                  <span className="old-price">{Number(product.oldPrice).toLocaleString()} ₽</span>
+                )}
+              </div>
+              {product.stock > 0 && (
+                <span className="product-stock-badge">В наличии</span>
+              )}
+            </div>
           </div>
         </Link>
         <div className="product-card-actions" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={handleAddToCart}
-            className="btn btn-primary btn-sm"
+            className="btn btn-primary btn-sm product-add-btn"
             disabled={product.stock <= 0 || addToCartMutation.isPending}
           >
-            {addToCartMutation.isPending ? 'Добавление...' : 'В корзину'}
+            {addToCartMutation.isPending ? 'Добавление...' : product.stock > 0 ? 'В корзину' : 'Нет в наличии'}
           </button>
-          {showWishlist && (
-            <button
-              onClick={handleWishlistToggle}
-              className={`btn btn-icon ${isInWishlist ? 'btn-wishlist-active' : 'btn-wishlist'}`}
-              disabled={addToWishlistMutation.isPending || removeFromWishlistMutation.isPending}
-              title={isInWishlist ? 'Удалить из избранного' : 'Добавить в избранное'}
-            >
-              {isInWishlist ? '★' : '☆'}
-            </button>
-          )}
         </div>
       </div>
 
