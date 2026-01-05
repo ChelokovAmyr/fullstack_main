@@ -71,14 +71,32 @@ export default function ProductPage() {
   const addToWishlistMutation = useMutation({
     mutationFn: () => wishlistApi.add(productId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
       queryClient.invalidateQueries({ queryKey: ['wishlist', productId] });
+    },
+    onError: (error: any) => {
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Ошибка',
+        message: error.response?.data?.message || 'Не удалось добавить товар в избранное',
+      });
     },
   });
 
   const removeFromWishlistMutation = useMutation({
     mutationFn: () => wishlistApi.remove(productId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
       queryClient.invalidateQueries({ queryKey: ['wishlist', productId] });
+    },
+    onError: (error: any) => {
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Ошибка',
+        message: error.response?.data?.message || 'Не удалось удалить товар из избранного',
+      });
     },
   });
 

@@ -15,11 +15,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
-  @Post(':productId')
-  addToWishlist(@Request() req, @Param('productId') productId: string) {
-    return this.wishlistService.addToWishlist(req.user.id, productId);
-  }
-
   @Get()
   findAll(@Request() req) {
     return this.wishlistService.findAll(req.user.id);
@@ -29,6 +24,11 @@ export class WishlistController {
   async check(@Request() req, @Param('productId') productId: string) {
     const isInWishlist = await this.wishlistService.isInWishlist(req.user.id, productId);
     return { isInWishlist };
+  }
+
+  @Post(':productId')
+  async addToWishlist(@Request() req, @Param('productId') productId: string) {
+    return this.wishlistService.addToWishlist(req.user.id, productId);
   }
 
   @Delete(':productId')

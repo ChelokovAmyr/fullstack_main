@@ -59,8 +59,8 @@ export default function ProductCard({ product, showWishlist = true }: ProductCar
   const addToWishlistMutation = useMutation({
     mutationFn: () => wishlistApi.add(product.id),
     onSuccess: () => {
-      setIsInWishlist(true);
       queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+      queryClient.invalidateQueries({ queryKey: ['wishlist', product.id] });
       setModal({
         isOpen: true,
         type: 'success',
@@ -81,8 +81,16 @@ export default function ProductCard({ product, showWishlist = true }: ProductCar
   const removeFromWishlistMutation = useMutation({
     mutationFn: () => wishlistApi.remove(product.id),
     onSuccess: () => {
-      setIsInWishlist(false);
       queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+      queryClient.invalidateQueries({ queryKey: ['wishlist', product.id] });
+    },
+    onError: (error: any) => {
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Ошибка',
+        message: error.response?.data?.message || 'Не удалось удалить товар из избранного',
+      });
     },
   });
 
