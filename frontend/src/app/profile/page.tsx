@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { authApi, ordersApi, wishlistApi } from '@/lib/api';
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import Modal from '@/components/Modal';
 
 export default function ProfilePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'wishlist'>('profile');
@@ -35,6 +36,13 @@ export default function ProfilePage() {
       router.push('/login');
     }
   }, [router]);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'wishlist' || tab === 'orders' || tab === 'profile') {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   const { data: user } = useQuery({
     queryKey: ['user', 'profile'],

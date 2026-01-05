@@ -62,17 +62,23 @@ a {
   color: #0070f3;
 }
 
-.cart-link {
+.cart-link,
+.wishlist-link {
   position: relative;
 }
 
-.cart-badge {
+.cart-badge,
+.wishlist-badge {
   background: #0070f3;
   color: white;
   border-radius: 50%;
   padding: 0.2rem 0.5rem;
   font-size: 0.75rem;
   margin-left: 0.5rem;
+}
+
+.wishlist-badge {
+  background: #e91e63;
 }
 
 .logout-btn {

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { authApi, cartApi } from '@/lib/api';
+import { authApi, cartApi, wishlistApi } from '@/lib/api';
 
 export default function Navbar() {
   const router = useRouter();
@@ -28,7 +28,14 @@ export default function Navbar() {
     enabled: isAuthenticated,
   });
 
+  const { data: wishlistItems } = useQuery({
+    queryKey: ['wishlist'],
+    queryFn: wishlistApi.getAll,
+    enabled: isAuthenticated,
+  });
+
   const cartCount = cartItems?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const wishlistCount = wishlistItems?.length || 0;
 
   const handleLogout = () => {
     authApi.logout();
@@ -49,6 +56,9 @@ export default function Navbar() {
             <>
               <Link href="/cart" className="cart-link">
                 Корзина {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              </Link>
+              <Link href="/profile?tab=wishlist" className="wishlist-link">
+                Избранное {wishlistCount > 0 && <span className="wishlist-badge">{wishlistCount}</span>}
               </Link>
               <Link href="/profile">{user?.firstName || 'Профиль'}</Link>
               <button onClick={handleLogout} className="logout-btn">
