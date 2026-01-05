@@ -52,7 +52,14 @@ export default function CartPage() {
   }
 
   if (isLoading) {
-    return <div className="container">Загрузка...</div>;
+    return (
+      <div className="container">
+        <div className="cart-loading">
+          <div className="loading-spinner"></div>
+          <p>Загрузка корзины...</p>
+        </div>
+      </div>
+    );
   }
 
   const total = cartItems?.reduce(
@@ -60,84 +67,157 @@ export default function CartPage() {
     0
   ) || 0;
 
+  const totalItems = cartItems?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+
   return (
     <div className="container">
-      <h1>Корзина</h1>
+      <div className="cart-header">
+        <h1>🛒 Корзина</h1>
+        {cartItems && cartItems.length > 0 && (
+          <p className="cart-subtitle">
+            {totalItems} {totalItems === 1 ? 'товар' : totalItems < 5 ? 'товара' : 'товаров'}
+          </p>
+        )}
+      </div>
 
       {cartItems && cartItems.length > 0 ? (
-        <>
-          <div className="cart-items">
-            {cartItems.map((item) => (
-              <div key={item.id} className="cart-item">
-                <Link href={`/products/${item.product.id}`}>
-                  {item.product.images && item.product.images[0] && (
-                    <img
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      className="cart-item-image"
-                    />
-                  )}
-                </Link>
-                <div className="cart-item-info">
-                  <Link href={`/products/${item.product.id}`}>
-                    <h3>{item.product.name}</h3>
+        <div className="cart-layout">
+          <div className="cart-items-section">
+            <div className="cart-items-header">
+              <h2>Товары в корзине</h2>
+              {cartItems.length > 0 && (
+                <button
+                  onClick={() => clearMutation.mutate()}
+                  className="btn-clear-cart"
+                  disabled={clearMutation.isPending}
+                >
+                  {clearMutation.isPending ? 'Очистка...' : '🗑️ Очистить корзину'}
+                </button>
+              )}
+            </div>
+
+            <div className="cart-items">
+              {cartItems.map((item) => (
+                <div key={item.id} className="cart-item-card">
+                  <Link href={`/products/${item.product.id}`} className="cart-item-image-wrapper">
+                    {item.product.images && item.product.images[0] ? (
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        className="cart-item-image"
+                      />
+                    ) : (
+                      <div className="cart-item-image-placeholder">📦</div>
+                    )}
                   </Link>
-                  <p className="cart-item-price">{item.product.price} ₽</p>
+                  
+                  <div className="cart-item-details">
+                    <Link href={`/products/${item.product.id}`} className="cart-item-name">
+                      <h3>{item.product.name}</h3>
+                    </Link>
+                    <div className="cart-item-meta">
+                      <span className="cart-item-unit-price">
+                        {Number(item.product.price).toLocaleString()} ₽ за шт.
+                      </span>
+                      {item.product.stock > 0 && (
+                        <span className="cart-item-stock">
+                          В наличии: {item.product.stock} шт.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="cart-item-controls">
+                    <div className="quantity-control">
+                      <button
+                        onClick={() =>
+                          updateQuantityMutation.mutate({
+                            id: item.id,
+                            quantity: Math.max(1, item.quantity - 1),
+                          })
+                        }
+                        className="quantity-btn quantity-btn-minus"
+                        disabled={item.quantity <= 1 || updateQuantityMutation.isPending}
+                      >
+                        −
+                      </button>
+                      <input
+                        type="number"
+                        min="1"
+                        max={item.product.stock}
+                        value={item.quantity}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value) || 1;
+                          const clampedValue = Math.max(1, Math.min(value, item.product.stock));
+                          updateQuantityMutation.mutate({
+                            id: item.id,
+                            quantity: clampedValue,
+                          });
+                        }}
+                        className="quantity-input"
+                        disabled={updateQuantityMutation.isPending}
+                      />
+                      <button
+                        onClick={() =>
+                          updateQuantityMutation.mutate({
+                            id: item.id,
+                            quantity: Math.min(item.product.stock, item.quantity + 1),
+                          })
+                        }
+                        className="quantity-btn quantity-btn-plus"
+                        disabled={item.quantity >= item.product.stock || updateQuantityMutation.isPending}
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <div className="cart-item-price-total">
+                      <span className="price-label">Сумма:</span>
+                      <span className="price-value">
+                        {(item.product.price * item.quantity).toLocaleString()} ₽
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => removeMutation.mutate(item.id)}
+                      className="btn-remove-item"
+                      disabled={removeMutation.isPending}
+                      title="Удалить из корзины"
+                    >
+                      {removeMutation.isPending ? '⏳' : '🗑️'}
+                    </button>
+                  </div>
                 </div>
-                <div className="cart-item-actions">
-                  <input
-                    type="number"
-                    min="1"
-                    max={item.product.stock}
-                    value={item.quantity}
-                    onChange={(e) =>
-                      updateQuantityMutation.mutate({
-                        id: item.id,
-                        quantity: parseInt(e.target.value) || 1,
-                      })
-                    }
-                    className="quantity-input"
-                  />
-                  <button
-                    onClick={() => removeMutation.mutate(item.id)}
-                    className="btn btn-danger"
-                  >
-                    Удалить
-                  </button>
-                </div>
-                <div className="cart-item-total">
-                  {(item.product.price * item.quantity).toLocaleString()} ₽
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <div className="cart-summary">
-            <div className="summary-row">
-              <span>Товаров:</span>
-              <span>{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
+          <div className="cart-summary-card">
+            <h2 className="summary-title">Итого</h2>
+            <div className="summary-details">
+              <div className="summary-row">
+                <span>Товаров:</span>
+                <span className="summary-value">{totalItems} шт.</span>
+              </div>
+              <div className="summary-row summary-row-total">
+                <span>К оплате:</span>
+                <span className="total-price">{total.toLocaleString()} ₽</span>
+              </div>
             </div>
-            <div className="summary-row">
-              <span>Итого:</span>
-              <span className="total-price">{total.toLocaleString()} ₽</span>
-            </div>
-            <div className="cart-actions">
-              <button
-                onClick={() => clearMutation.mutate()}
-                className="btn btn-secondary"
-              >
-                Очистить корзину
-              </button>
-              <Link href="/checkout" className="btn btn-primary">
-                Оформить заказ
-              </Link>
-            </div>
+            <Link href="/checkout" className="btn-checkout">
+              Оформить заказ →
+            </Link>
+            <Link href="/products" className="link-continue-shopping">
+              ← Продолжить покупки
+            </Link>
           </div>
-        </>
+        </div>
       ) : (
         <div className="empty-cart">
-          <p>Ваша корзина пуста</p>
-          <Link href="/products" className="btn btn-primary">
+          <div className="empty-cart-icon">🛒</div>
+          <h2>Ваша корзина пуста</h2>
+          <p>Добавьте товары из каталога, чтобы они появились здесь</p>
+          <Link href="/products" className="btn btn-primary btn-large">
             Перейти к покупкам
           </Link>
         </div>
